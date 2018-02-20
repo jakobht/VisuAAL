@@ -14,6 +14,10 @@ repositories {
 apply plugin: 'java'
 apply plugin: 'javafx-gradle-plugin'
 
+if (!hasProperty('mainClass')) {
+    project.ext.mainClass = 'Main'
+}
+    
 dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.graphstream:gs-core:1.3'
