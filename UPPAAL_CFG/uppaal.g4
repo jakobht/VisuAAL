@@ -1,6 +1,12 @@
+
 grammar uppaal;
+@header {
+package parsers.Declaration.ANTLRGenerated;
+}
             xta : declaration* EOF;
-    declaration : functionDecl | variableDecl | typeDecl | procDecl ;
+    declaration : functionDecl | variableDecl | typeDecl | procDecl | importDecl ;
+     importDecl : 'import' '"' PATH '"' '{' prototype+ '}' ';' ;
+     prototype  : type ID parameterList ;
   instantiation : ID '=' ID '(' argList ')' ';'
 				| ID ':=' ID '(' argList ')' ';' ;
 	systemBlock : instantiation* system ;
@@ -120,3 +126,4 @@ caseExpr       : 'case' expression ':' statement*
     LINE_COMMENT
         : '//' ~[\r\n]* -> channel(HIDDEN)
         ;
+    PATH : [a-zA-Z0-9_/.,\\]+ ;

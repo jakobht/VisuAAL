@@ -1,4 +1,7 @@
-package parsers.Declaration.ANTLRGenerated;// Generated from uppaal.g4 by ANTLR 4.6
+// Generated from uppaal.g4 by ANTLR 4.6
+
+package parsers.Declaration.ANTLRGenerated;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -34,6 +37,30 @@ public class uppaalBaseListener implements uppaalListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDeclaration(uppaalParser.DeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterImportDecl(uppaalParser.ImportDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitImportDecl(uppaalParser.ImportDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrototype(uppaalParser.PrototypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrototype(uppaalParser.PrototypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

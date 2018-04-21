@@ -1,4 +1,7 @@
 // Generated from uppaal.g4 by ANTLR 4.6
+
+package parsers.Declaration.ANTLRGenerated;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -26,6 +29,26 @@ public interface uppaalListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeclaration(uppaalParser.DeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link uppaalParser#importDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterImportDecl(uppaalParser.ImportDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link uppaalParser#importDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitImportDecl(uppaalParser.ImportDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link uppaalParser#prototype}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrototype(uppaalParser.PrototypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link uppaalParser#prototype}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrototype(uppaalParser.PrototypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link uppaalParser#instantiation}.
 	 * @param ctx the parse tree
