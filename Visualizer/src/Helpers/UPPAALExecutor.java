@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -76,29 +77,41 @@ public class UPPAALExecutor {
 
     private static SimulateOutput runUppaal(String modelPath, String verifytaLocation, String queryFile, int simulateCount, TextInputControl feedbackCtrl) { {
         try {
+            verifytaLocation = "/home/jakob/.SiriKali/reachi-enc-0.10/uppaal_bin/stratego_nightly_2510284831ad4e5091838eca49934cd93813736c/verifyta";
+            System.err.println(verifytaLocation + " " + modelPath + " " + queryFile);
             ProcessBuilder builder = new ProcessBuilder(verifytaLocation, modelPath, queryFile);
+            Map<String, String> env = builder.environment();
+            env.put("LD_LIBRARY_PATH", "/home/jakob/.SiriKali/reachi-enc-0.10/uppaal_bin/stratego_nightly_66ff63f13f8aac6dd3107f175a3605d7697899ba");
             long startTime = System.currentTimeMillis();
             Process p = builder.start();
             verifytaProcesses.add(p);
 
             //TODO: Maybe this output should be serialized incase errors happen later.
             PrintStreamList printStreamList = new PrintStreamList();
-            redirect(p.getInputStream(), printStreamList, new PrintStreamRedirector(feedbackCtrl));
+            Thread inputStreamLoader = redirect(p.getInputStream(), printStreamList, new PrintStreamRedirector(feedbackCtrl));
+            PrintStreamList printStreamListerr = new PrintStreamList();
+            Thread errorStreamLoader = redirect(p.getErrorStream(), printStreamListerr, new PrintStreamRedirector(feedbackCtrl));
+                       
 
             p.waitFor();
+            inputStreamLoader.join();
+            errorStreamLoader.join();
             verifytaProcesses.remove(p);
 
             if(isCancelled())
                 return null;
 
-            if (p.exitValue() > 0)
+            if (p.exitValue() > 0){
+                System.err.println(printStreamList.getLines());
+                System.err.println(printStreamListerr.getLines());
                 throw new UPPAALFailedException();
-
+            }
+                
             if (printStreamList.getLines().size() == 0)
                 return null;
 
             long endTime = System.currentTimeMillis();
-            feedbackCtrl.setText( feedbackCtrl.getText()+"This took: "+String.valueOf(endTime-startTime)+" ms");
+            // feedbackCtrl.setText( feedbackCtrl.getText()+"This took: "+String.valueOf(endTime-startTime)+" ms");
             return SimulateParser.parse(printStreamList.getLines(), simulateCount);
 
         } catch (InterruptedException | IOException e) {
@@ -106,15 +119,18 @@ public class UPPAALExecutor {
         }
     }}
 
-    private static void redirect(final InputStream src, final PrintStream... dest) {
-         new Thread(() -> {
+    private static Thread redirect(final InputStream src, final PrintStream... dest) {
+         Thread t = new Thread(() -> {
             Scanner sc = new Scanner(src);
             while (sc.hasNextLine() && !isCancelled()) {
                 String line = sc.nextLine();
                 for (PrintStream p : dest)
                     p.println(line);
             }
-        }).start();
+         });
+         t.start();
+         return t;
+
     }
 
     public static boolean isSimulationsActive() {
