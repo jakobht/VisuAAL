@@ -1,3 +1,7 @@
+**Important** Note on this fork
+1. It runs the simulation 1000 times faster than the original to allow millisecond precision.
+2. To use it you _need to_ hardcode the path to the uppaal binary and the path to any shared libs in `/Visualizer/src/Helpers/UPPAALExecutor.java` lines 80 and 84.
+
 # Visualizing Behavior of Distributed Network Protocols using UPPAAL Simulations
 
 If you load a UPPAAL model for a distributed network protocol into this application, you can get useful insight of what going on in the protocol over time. 
