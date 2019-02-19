@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import View.IntegerTextField?>
+<?import View.ToggleSwitch?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootElement" xmlns="http://javafx.com/javafx/8.0.112"
+          fx:controller="View.MainWindowController">
+
+    <children>
+        <GridPane fx:id="horizontalGrid" prefHeight="48.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="468.0" minWidth="200.0" prefWidth="399.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="332.0" prefWidth="401.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Button fx:id="loadModelButton" mnemonicParsing="false" onAction="#loadModel" prefWidth="200"
+                        text="Load Model or Simulation" GridPane.halignment="LEFT"/>
+                <Button fx:id="saveModelButton" mnemonicParsing="false" onAction="#saveModel" prefWidth="200"
+                        text="Save Model" visible="false" GridPane.columnIndex="1" GridPane.halignment="LEFT"/>
+            </children>
+        </GridPane>
+        <TabPane fx:id="tabPane" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+
+            <tabs>
+                <Tab fx:id="configurationTab" closable="false" text="Configuration">
+                    <content>
+                        <TableView fx:id="constantsTable" editable="true" GridPane.rowIndex="0">
+                            <columns>
+                                <TableColumn fx:id="columnScope" editable="false" prefWidth="150.0" text="Scope"/>
+                                <TableColumn fx:id="columnName" editable="false" prefWidth="150.0" text="Name"/>
+                                <TableColumn fx:id="columnValue" prefWidth="440.0" text="Value"/>
+                            </columns>
+                        </TableView>
+                    </content>
+                </Tab>
+                <Tab closable="false" text="Dynamic Updates">
+                    <content>
+                        <VBox alignment="TOP_CENTER">
+                            <TableView fx:id="dynamicTable" editable="true">
+                                <columns>
+                                    <TableColumn fx:id="dynColumnName" prefWidth="440" text="Variable"/>
+                                    <TableColumn fx:id="dynColumnValue" text="New value"/>
+                                    <TableColumn fx:id="dynColumnTime" text="Model time"/>
+                                </columns>
+                            </TableView>
+                            <Button fx:id="btnAddDynamicUpdateRow" alignment="CENTER" mnemonicParsing="false"
+                                    onAction="#btnAddDynamicUpdateRowClicked" text="Add new update"/>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="topologyGeneratorTab" closable="false" onSelectionChanged="#onEnterTopologyGenerator"
+                     text="Topology Generator">
+                    <fx:include fx:id="topologyGenerator" source="topology/TopologyGenerator.fxml"/>
+                </Tab>
+                <Tab closable="false" text="Simulation Generator">
+                    <content>
+                        <GridPane fx:id="queryGridPane" hgap="10" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                            </rowConstraints>
+                            <children>
+                                <TableView fx:id="tableOutputVars" editable="true" prefHeight="200" prefWidth="800.0"
+                                           GridPane.rowIndex="0">
+                                    <columns>
+                                        <TableColumn fx:id="outputVarUse" text="Use"/>
+                                        <TableColumn fx:id="outputVarScope" editable="false" text="Scope"/>
+                                        <TableColumn fx:id="outputVarName" editable="false" text="Name"/>
+                                        <TableColumn fx:id="outputVarEdge" editable="false" text="Edge"/>
+                                        <TableColumn fx:id="outputVarNode" editable="false" text="Node"/>
+                                    </columns>
+                                </TableView>
+                                <GridPane GridPane.rowIndex="1">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Options" GridPane.columnIndex="0" GridPane.halignment="CENTER"/>
+                                        <Label text="Time bound: " GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                                            <padding>
+                                                <Insets right="10.0"/>
+                                            </padding>
+                                        </Label>
+                                        <IntegerTextField fx:id="txtQueryTimeBound" prefHeight="25.0" prefWidth="213.0"
+                                                          promptText="Time bound" GridPane.columnIndex="2"/>
+                                        <Label text="Number of simulations: " GridPane.columnIndex="3"
+                                               GridPane.halignment="RIGHT">
+                                            <padding>
+                                                <Insets right="10.0"/>
+                                            </padding>
+                                        </Label>
+                                        <IntegerTextField fx:id="txtQuerySimulations" prefHeight="25.0"
+                                                          prefWidth="100.0" promptText="Simulations"
+                                                          GridPane.columnIndex="4"/>
+                                        <Label prefHeight="17.0" prefWidth="149.0" text="Use generated topology: "
+                                               GridPane.columnIndex="5" GridPane.halignment="RIGHT">
+                                            <padding>
+                                                <Insets right="10.0"/>
+                                            </padding>
+                                        </Label>
+                                        <ToggleSwitch fx:id="chkUseRandomTopology" maxHeight="20.0" maxWidth="80.0"
+                                                      GridPane.columnIndex="6"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                            <HBox alignment="CENTER" spacing="30.0"
+                                  style="-fx-border-width: 1 0 0 0; -fx-border-color: black"
+                                  GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                                <TextField fx:id="txtSimulationName" alignment="CENTER" maxWidth="200.0"
+                                           promptText="Simulation Name"/>
+                                <Button mnemonicParsing="false" onAction="#runSimulationQuery" prefWidth="200.0"
+                                        text="Run Simulation Query in UPPAAL"/>
+                                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelSimulations"
+                                        text="Cancel All Simulations"/>
+                                <padding>
+                                    <Insets top="10.0"/>
+                                </padding>
+                            </HBox>
+                            <ProgressIndicator fx:id="simulationProgress" GridPane.rowIndex="3"/>
+                            <TextArea fx:id="txtUppaalOutput" prefHeight="200.0" prefWidth="200.0" wrapText="true"
+                                      GridPane.rowIndex="4">
+                                <padding>
+                                    <Insets left="20.0" right="20.0"/>
+                                </padding>
+                            </TextArea>
+                        </GridPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="50.0"/>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+</GridPane>
