@@ -40,8 +40,10 @@ public class UPPAALTopology extends ArrayList<UPPAALEdge> implements Serializabl
         _graphInstance = graph;
         initializeGraph();
         this._numberOfNodes = graph.getNodeCount();
-        for (Edge edge : _graphInstance.getEachEdge()) {
-            add(new UPPAALEdge(edge.getSourceNode().getId(), edge.getTargetNode().getId()));
+        for (Node n : _graphInstance) {
+            for(Edge edge : n) {
+                add(new UPPAALEdge(edge.getSourceNode().getId(), edge.getTargetNode().getId()));
+            }
         }
     }
 
@@ -165,12 +167,12 @@ public class UPPAALTopology extends ArrayList<UPPAALEdge> implements Serializabl
     }
 
     private void setElementColor(Element e, String color) {
-        e.addAttribute("ui.style", "fill-color:" + color + ";");
+        e.setAttribute("ui.style", "fill-color:" + color + ";");
     }
 
     private void markGradientElement(Element e, double gradientValue, String gradientFrom, String gradientTo) {
-        e.addAttribute("ui.style", "fill-mode: dyn-plain;");
-        e.addAttribute("ui.style", "fill-color: " + gradientFrom + ", " + gradientTo + ";");
+        e.setAttribute("ui.style", "fill-mode: dyn-plain;");
+        e.setAttribute("ui.style", "fill-color: " + gradientFrom + ", " + gradientTo + ";");
         e.setAttribute("ui.color", gradientValue);
     }
 
@@ -184,7 +186,7 @@ public class UPPAALTopology extends ArrayList<UPPAALEdge> implements Serializabl
     }
 
     private void setNodeLocation(Node graphNode, Point point) {
-        graphNode.addAttribute("layout.frozen");
+        graphNode.setAttribute("layout.frozen");
         graphNode.setAttribute("xyz", point.x, point.y, 0);
     }
 
@@ -194,7 +196,7 @@ public class UPPAALTopology extends ArrayList<UPPAALEdge> implements Serializabl
     }
 
     private void showLabelOnNode(Node n, String nodeName) {
-        n.addAttribute("ui.label", nodeName);
+        n.setAttribute("ui.label", nodeName);
     }
 
     public Graph getGraph() {
@@ -230,8 +232,8 @@ public class UPPAALTopology extends ArrayList<UPPAALEdge> implements Serializabl
         _graphInstance.setStrict(false);
         setDefaultColors();
         _graphInstance.setAutoCreate(true);
-        _graphInstance.addAttribute("ui.quality");
-        _graphInstance.addAttribute("ui.antialias");
+        _graphInstance.setAttribute("ui.quality");
+        _graphInstance.setAttribute("ui.antialias");
         _graphInstance.setAttribute("ui.stylesheet", styleSheet);
     }
 

@@ -42,15 +42,17 @@ public class VQOption extends EnableDisableSimulationOption {
         if (SimulationMenuController.doGraphReset) {
             switch (type) {
                 case Edge:
-                    for (Edge e : simulations.getTopology().getGraph().getEdgeSet()) {
-                        e.addAttribute("ui.style", "fill-color:" + "black" + ";");
+                    for (Node n : simulations.getTopology().getGraph()) {
+                        for(Edge e : n) {
+                            e.setAttribute("ui.style", "fill-color:" + "black" + ";");
+                        }
                     }
                     //TODO: create a real method for this.
                     simulations.setMinEdgeValue(0);
                     break;
                 case Node:
-                    for (Node n : simulations.getTopology().getGraph().getNodeSet()) {
-                        n.addAttribute("ui.style", "fill-color:" + "black" + ";");
+                    for (Node n : simulations.getTopology().getGraph()) {
+                        n.setAttribute("ui.style", "fill-color:" + "black" + ";");
                     }
                     //TODO: create a real method for this.
                     simulations.setMinNodeValue(0);

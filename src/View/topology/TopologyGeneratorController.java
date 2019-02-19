@@ -239,23 +239,19 @@ public class TopologyGeneratorController implements Initializable, NodeMovedEven
             return;
         try {
             autoResize();
-
             GPSLogNodes nodes = GPSLogParser.parse(gpsLogFile);
             topologyViewerController.setMapBounds(nodes.getBounds());
             this.latLngBounds = nodes.getBounds();
             UPPAALTopology loadedTopology = nodes.generateUPPAALTopologyWithBounds(topologyViewerController.getMapBounds());
-
             gpsRelatedSimulationPoints = new ArrayList<>();
             gpsRelatedSimulationPoints.addAll(nodes.generateSimulationMoveNodePoints());
             if (GUIHelper.showPrompt("Do you want to include a new output variable displaying the RSSI? You can access it through the VQ using OUTPUT_RSSI"))
                 gpsRelatedSimulationPoints.addAll(new GPSLogSimulationPointGenerator(nodes).generateRSSISimulationPoints());
-
             loadedTopology.updateGraph();
             showGraph(loadedTopology.getGraph(), false); //We will not detect when nodes are moved because listener is null
             chkFreezeMap.switchOnProperty().set(true);
             chkShowGridSettings.switchOnProperty().set(false);
             lastGeneratedTopology = loadedTopology;
-
             MainWindowController.getInstance().getUppaalModel().replaceTopologyChanges(nodes.getTopologyChanges());
             MainWindowController.getInstance().enableDisableUseTopologyFromTopologyGenerator(true);
         } catch (Exception e) {

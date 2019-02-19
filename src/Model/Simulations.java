@@ -367,12 +367,14 @@ public class Simulations implements Serializable, VariablesUpdateObservable {
 
         Collection<String> edgeVars = parseTreeEdge.getUsedVariables();
 
-        for (Edge id : getTopology().getGraph().getEdgeSet()) {
-            for (String s : edgeVars) {
-                SimulationEdgePoint sp = new SimulationEdgePoint(s, 0,
-                        id.getSourceNode().getId(), id.getTargetNode().getId(), 0, 0);
-                handleUpdateForSimulationPoint(sp, true);
-                updateAllObservers(sp, sp.getValue());
+        for (org.graphstream.graph.Node n : getTopology().getGraph()) {
+            for(Edge id : n) {
+                for (String s : edgeVars) {
+                    SimulationEdgePoint sp = new SimulationEdgePoint(s, 0,
+                            id.getSourceNode().getId(), id.getTargetNode().getId(), 0, 0);
+                    handleUpdateForSimulationPoint(sp, true);
+                    updateAllObservers(sp, sp.getValue());
+                }
             }
         }
     }

@@ -262,7 +262,7 @@ public class MainWindowController implements Initializable {
         Settings.Instance().setRecentLoadedModel(selectedFile.getPath());
 
         try {
-            uppaalModel = new UPPAALModel(tempFile.getPath());
+            uppaalModel = new UPPAALModel(tempFile.getPath(), selectedFile.getParent());
             uppaalModel.load();
             constantsTable.setItems(uppaalModel.getAllConfigVars());
             tableOutputVars.setItems(uppaalModel.getOutputVars());

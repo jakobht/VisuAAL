@@ -55,11 +55,21 @@ public class MouseClickListener extends Thread implements ViewerListener {
     @Override
     public void buttonReleased(String id) {
         if (!eventListeners.isEmpty()) {
-            Object[] newXYZ = graph.getNode(id).getAttribute("xyz");
+            Object[] newXYZ = graph.getNode(id).getArray("xyz");
             NodeMovedEvent evt = new NodeMovedEvent(this, id, (double) newXYZ[0], (double) newXYZ[1]);
 
             Platform.runLater(() -> eventListeners.forEach(l -> l.onNodeMoved(evt)));
         }
+    }
+
+    @Override
+    public void mouseOver(String s) {
+
+    }
+
+    @Override
+    public void mouseLeft(String s) {
+
     }
 
     @Override

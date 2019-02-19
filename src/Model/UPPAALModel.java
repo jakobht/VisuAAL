@@ -1,6 +1,7 @@
 package Model;
 
 import Helpers.GUIHelper;
+import Helpers.Pair;
 import Helpers.UPPAALExecutor;
 import View.AlertData;
 import javafx.application.Platform;
@@ -35,13 +36,14 @@ public class UPPAALModel implements Externalizable, Cloneable {
     private double modelTimeUnit = 1;
 
     private String modelPath;
+    private String orgPath;
     private List<UPPAALProcess> processes;
 
     public UPPAALModel() {
     } //Only needed for Externalizable
 
-    public UPPAALModel(String path) {
-        modelPath = path;
+    public UPPAALModel(String path, String orgpath) {
+        modelPath = path; this.orgPath = orgpath;
     }
 
     public void load() throws Exception {
@@ -108,7 +110,7 @@ public class UPPAALModel implements Externalizable, Cloneable {
     }
 
     public CompletableFuture<Simulations> runQuery(String query, TextInputControl feedbackCtrl) throws IOException {
-        CompletableFuture<SimulateOutput> simulateOutput = UPPAALExecutor.startUppaalQuery(getModelPath(), query, feedbackCtrl);
+        CompletableFuture<SimulateOutput> simulateOutput = UPPAALExecutor.startUppaalQuery(modelPath, orgPath, query, feedbackCtrl);
         if (simulateOutput == null)
             return null;
 

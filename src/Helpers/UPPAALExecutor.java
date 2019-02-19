@@ -28,7 +28,7 @@ public class UPPAALExecutor {
     private static Collection<Process> verifytaProcesses = new ArrayList<>();
     private static SimpleBooleanProperty simulationsActive = new SimpleBooleanProperty(false);
 
-    public static CompletableFuture<SimulateOutput> startUppaalQuery(String modelPath, String query, TextInputControl feedbackCtrl) throws IOException {
+    public static CompletableFuture<SimulateOutput> startUppaalQuery(String modelPath, String orgPath, String query, TextInputControl feedbackCtrl) throws IOException {
         setCancelled(false);
         simulationsActive.set(true);
         String verifytaLocation = GUIHelper.getVerifytaLocationFromUser();
@@ -43,7 +43,7 @@ public class UPPAALExecutor {
 
         File queryFile = UPPAALParser.generateQueryFile(query);
 
-        CompletableFuture<SimulateOutput> simulateOutputCompletableFuture = CompletableFuture.supplyAsync(() -> runUppaal(modelPath, verifytaLocation, queryFile.getPath(), simulateCount, feedbackCtrl));
+        CompletableFuture<SimulateOutput> simulateOutputCompletableFuture = CompletableFuture.supplyAsync(() -> runUppaal(modelPath, orgPath, verifytaLocation, queryFile.getPath(), simulateCount, feedbackCtrl));
         futures.add(simulateOutputCompletableFuture);
         simulateOutputCompletableFuture.thenApply(p -> handleFutureDone(simulateOutputCompletableFuture));
         return simulateOutputCompletableFuture;
@@ -75,14 +75,13 @@ public class UPPAALExecutor {
         UPPAALExecutor.cancelled = cancelled;
     }
 
-    private static SimulateOutput runUppaal(String modelPath, String verifytaLocation, String queryFile, int simulateCount, TextInputControl feedbackCtrl) {
+    private static SimulateOutput runUppaal(String modelPath, String orgPath, String verifytaLocation, String queryFile, int simulateCount, TextInputControl feedbackCtrl) {
         {
             try {
-                verifytaLocation = "/home/jakob/.SiriKali/reachi-enc-0.10/uppaal_bin/stratego_nightly_2510284831ad4e5091838eca49934cd93813736c/verifyta";
                 System.err.println(verifytaLocation + " " + modelPath + " " + queryFile);
                 ProcessBuilder builder = new ProcessBuilder(verifytaLocation, modelPath, queryFile);
                 Map<String, String> env = builder.environment();
-                env.put("LD_LIBRARY_PATH", "/home/jakob/.SiriKali/reachi-enc-0.10/uppaal_bin/stratego_nightly_66ff63f13f8aac6dd3107f175a3605d7697899ba");
+                env.put("LD_LIBRARY_PATH", orgPath + ":" + verifytaLocation.substring(0, verifytaLocation.length() - 8));
                 long startTime = System.currentTimeMillis();
                 Process p = builder.start();
                 verifytaProcesses.add(p);

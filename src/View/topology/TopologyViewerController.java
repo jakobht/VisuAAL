@@ -17,15 +17,15 @@ import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import org.graphstream.graph.Graph;
-import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.view.Viewer;
 
 import javax.imageio.ImageIO;
@@ -42,7 +42,7 @@ public class TopologyViewerController implements Initializable, MapComponentInit
     static private boolean isTopologyGenerator = true;
     public StackPane rootPane;
     @FXML
-    private SwingNode graphStreamNode;
+    private StackPane graphStreamNode;
     @FXML
     private ImageViewPane backgroundView;
     private BooleanProperty showMap = new SimpleBooleanProperty(true);
@@ -54,7 +54,7 @@ public class TopologyViewerController implements Initializable, MapComponentInit
     private GoogleMapView mapView;
     private GoogleMap map;
     private Graph currentlyShownGraph;
-    private ViewPanel swingView;
+    private org.graphstream.ui.view.View swingView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,22 +102,16 @@ public class TopologyViewerController implements Initializable, MapComponentInit
 
     public void showGraph(Graph g, boolean autoLayout, SimulationDataContainer nodeVarGridPane, NodeMovedEventListener listener) {
         currentlyShownGraph = g;
-
-        Viewer v = new Viewer(currentlyShownGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-
+        Viewer v = new FxViewer(currentlyShownGraph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         if (autoLayout) v.enableAutoLayout();
         v.enableXYZfeedback(!autoLayout);
-
         MouseClickListener mouse = new MouseClickListener(v, currentlyShownGraph, nodeVarGridPane);
         if (listener != null) mouse.addNodesMovedListener(listener);
         mouse.start();
 
-
         swingView = v.addDefaultView(false);
-
-        SwingUtilities.invokeLater(() -> {
-            graphStreamNode.setContent(swingView);
-        });
+        // TODO: FIXME
+//        graphStreamNode.getChildren().add(swingView);
 
         if (map != null) {
             Pair<Double, Double> widthAndHeight = GoogleMapsHelper.calculateSizeInMeters(getMapBounds());
