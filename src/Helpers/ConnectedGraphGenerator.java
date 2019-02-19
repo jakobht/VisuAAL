@@ -80,8 +80,10 @@ public class ConnectedGraphGenerator {
         int initEdgeCount = graph.getEdgeCount();
         for (int i = 0; i < initEdgeCount; i++) {
             Edge curEdge = graph.getEdge(i);
-            graph.addEdge(String.valueOf(graph.getEdgeCount()), curEdge.getTargetNode(),
-                    curEdge.getSourceNode(), true);
+            Node from = curEdge.getSourceNode();
+            Node to = curEdge.getTargetNode();
+            graph.addEdge(String.valueOf(graph.getEdgeCount()), to,
+                    from, true);
         }
         return new UPPAALTopology(graph);
     }
