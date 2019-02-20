@@ -25,6 +25,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import org.graphstream.graph.Graph;
+import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.view.Viewer;
 
@@ -54,7 +55,7 @@ public class TopologyViewerController implements Initializable, MapComponentInit
     private GoogleMapView mapView;
     private GoogleMap map;
     private Graph currentlyShownGraph;
-    private org.graphstream.ui.view.View swingView;
+    private FxDefaultView swingView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -109,10 +110,8 @@ public class TopologyViewerController implements Initializable, MapComponentInit
         if (listener != null) mouse.addNodesMovedListener(listener);
         mouse.start();
 
-        swingView = v.addDefaultView(false);
-        // TODO: FIXME
-//        graphStreamNode.getChildren().add(swingView);
-
+        swingView = (FxDefaultView)v.addDefaultView(false);
+        graphStreamNode.getChildren().add(swingView);
         if (map != null) {
             Pair<Double, Double> widthAndHeight = GoogleMapsHelper.calculateSizeInMeters(getMapBounds());
             setGraphViewport(widthAndHeight);
